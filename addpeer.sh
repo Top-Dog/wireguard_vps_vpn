@@ -4,7 +4,7 @@
 # ###########################################
 #
 # Wireguard script to add a peer
-# by OneMarcFifty
+# by OneMarcFifty, modified by Top-DOg for use with Amazon Linux 2 (AWS Web Services)
 # the place for digital DIY
 #
 # https://www.youtube.com/channel/UCG5Ph9Mm6UEQLJJ-kGIC2AQ
@@ -14,7 +14,7 @@
 
 
 # ###############################
-# This needs to be run as root !
+# This needs to be run as root ! Use $sudo -i to switch to a root terminal
 # ###############################
 
 # first parameter is the clientname
@@ -31,14 +31,16 @@ echo -e "\ngenerating peer $WGCLIENTNAME with IP $WGCLIENTADDRESS\n"
 export NEW_PRIVATE_KEY=`wg genkey`
 export NEW_PUBLIC_KEY=$(echo "$NEW_PRIVATE_KEY" | wg pubkey)
 
-# read out this server's pubkey
-
-readarray -d : -t templine <<< $(wg | grep "public key")
-export SERVER_PUBLIC_KEY=${templine[1]};
-readarray -d : -t templine <<< $(wg | grep "listening port")
-#SERVER_LISTENING_PORT=${templine[1]};
-# we need to remove the leading space 
-export SERVER_LISTENING_PORT=${templine[1]// /}
+# read out this server's pubkey and listening port
+# For sed, these options are used:
+# -n means not to print anything by default.
+# -e is followed by a sed command.
+# s is the pattern replacement command
+# The regular expression ^.*public key:  matches the pattern you're looking for, plus any preceding text (gets the last occurane if there are many)
+# The match, i.e. everything on the line up to public key: , is replaced by the empty string (i.e. deleted).
+# The final p means to print the transformed line.
+export SERVER_PUBLIC_KEY=$(wg | sed -n -e 's/^.*public key: //p')
+export SERVER_LISTENING_PORT=$(wg | sed -n -e 's/^.*listening port: //p')
 
 # guess our own internet address
 
