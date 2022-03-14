@@ -1,5 +1,6 @@
 # wireguard_vps_vpn
-Wireguard Installation Scripts (Modfied for AWS EC2 and the yum package manager)
+## Modfied for AWS EC2 and the yum package manager
+Wireguard Installation Scripts 
 
 these scripts can be used to install wireguard on a virtual private server (VPS), i.e.
 a server that you have running in the cloud.
