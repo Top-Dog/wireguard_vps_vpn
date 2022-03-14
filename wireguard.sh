@@ -15,7 +15,7 @@
 # ###############################
 # This needs to be run as root for output redirection to work !
 # ###############################
-sudo -i
+# sudo -i
 
 # ###########################################
 # Delete any old config
@@ -45,7 +45,9 @@ amazon-linux-extras install epel
 
 yum install -y wireguard-dkms wireguard-tools
 yum update -y
-reboot -i
+
+# !!! Might need a reboot here, commented for now !!!
+#reboot -i
 
 # let's also clean up a little bit
 # in case some redundant packages exist
