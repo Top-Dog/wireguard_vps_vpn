@@ -3,8 +3,8 @@
 # ###########################################
 # ###########################################
 #
-# Wireguard installation script for Ubuntu 18.04
-# by OneMarcFifty
+# Wireguard installation script for Amazon Linux 2
+# Modfied by Top-Dog, based on the tutorial by OneMarcFifty
 # the place for digital DIY
 #
 # https://www.youtube.com/channel/UCG5Ph9Mm6UEQLJJ-kGIC2AQ
@@ -13,8 +13,9 @@
 # ###########################################
 
 # ###############################
-# This needs to be run as root !
+# This needs to be run as root for output redirection to work !
 # ###############################
+sudo -i
 
 # ###########################################
 # Delete any old config
@@ -32,20 +33,24 @@ fi
 # update the software sources
 # ###############################
 
-apt update
-apt install -y software-properties-common curl qrencode
-add-apt-repository -y ppa:wireguard/wireguard
+yum update
+yum install -y software-properties-common curl qrencode
+curl -Lo /etc/yum.repos.d/wireguard.repo https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/repo/epel-7/jdoss-wireguard-epel-7.repo
+#yum install -y epel-release
+amazon-linux-extras install epel
 
 # ###############################
 # install wireguard
 # ###############################
 
-apt install -y wireguard
+yum install -y wireguard-dkms wireguard-tools
+yum update -y
+reboot -i
 
 # let's also clean up a little bit
 # in case some redundant packages exist
 
-apt -y autoremove
+yum -y autoremove
 
 # ###############################
 # generate a key pair
@@ -77,6 +82,14 @@ sysctl -w net.ipv4.ip_forward=1
 # --- print out the content of sysctl.conf
 sysctl -p
 
+# We are now going to create a config file like this (/etc/wireguard/wgvpn.conf):
+# [Interface]
+# Address = 192.168.88.1/24 # or 10.0.0.1/24
+# SaveConfig = true
+# ListenPort = 51820
+# PrivateKey = GENERATED_SERVER_PRIVATE_KEY
+# PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 
 # ###########################################
 # define the wg0 interface
@@ -117,7 +130,7 @@ export OUR_OWN_IP=`sudo -u nobody curl -s ipinfo.io/ip`
 
 # find out which interface the public IP address is on
 
-readarray -d " " -t templine <<< $(ip -br addr | grep $OUR_OWN_IP)
+readarray -t templine <<< $(ip -br addr | grep $OUR_OWN_IP)
 export OUR_INTERFACE=${templine[0]}
 
 echo "our interface:$OUR_INTERFACE:"
