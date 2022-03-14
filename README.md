@@ -1,10 +1,10 @@
 # wireguard_vps_vpn
-Wireguard Installation Scripts
+Wireguard Installation Scripts (Modfied for AWS EC2 and the yum package manager)
 
 these scripts can be used to install wireguard on a virtual private server (VPS), i.e.
 a server that you have running in the cloud.
 
-Alternatively you can use it to install wireguard VPN software on any Ubuntu 18 Server.
+Alternatively you can use it to install wireguard VPN software on an Amazon Linux 2 VM (offered as part of their free tier).
 
 There is an installation script called wireguard.sh that does all the necessary things for you in order to install wireguard on the virtual server.
 
