@@ -5,6 +5,8 @@ Wireguard Installation Scripts
 these scripts can be used to install wireguard on a virtual private server (VPS), i.e.
 a server that you have running in the cloud. They must be run as root, or switch to root with `$ sudo -i`
 
+*Remember to open TCP/UDP Port 51820 on the VPS (listening port)*
+
 Alternatively you can use it to install wireguard VPN software on an Amazon Linux 2 VM (offered as part of their free tier).
 
 There is an installation script called wireguard.sh that does all the necessary things for you in order to install wireguard on the virtual server.
